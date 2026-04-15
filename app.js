@@ -473,6 +473,24 @@ function maybeSeedData() {
   saveLog(log);
 }
 
+// ===== Download Backup =====
+function downloadData() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    medicines: loadMedicines(),
+    log: loadLog(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `medicine-tracker-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded.');
+}
+
 // ===== Bootstrap =====
 document.addEventListener('DOMContentLoaded', () => {
   maybeSeedData();
